@@ -4,5 +4,6 @@
         <page name='1 - Start'/>
         <page name='2 - TraitsExample'/>
         <page name='3 - Subjects'/>
+        <page name='4 - Blackjack Challenge'/>
     </pages>
 </playground>
