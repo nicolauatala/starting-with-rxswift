@@ -7,53 +7,63 @@ public func example(of description: String, action: () -> Void) {
 
 example(of: "PublishSubject") {
 	
-	let quotes = PublishSubject<String>()
 	/*
 	
 	PublishSubject emits only new items to its subscriber; every item added to the subject before the subscription
-		will be not emitted. If the source Observable terminates with an error, the PublishSubject will not emit any
-		items to subsequent observers, but will simply pass along the Error/Completed event from the source Observable.
+	will be not emitted. If the source Observable terminates with an error, the PublishSubject will not emit any
+	items to subsequent observers, but will simply pass along the Error/Completed event from the source Observable.
 	*/
 	
-	quotes.onNext("itsNotMyFault")
+	let quotes = PublishSubject<String>()
+	
+	quotes.onNext(itsNotMyFault)
 	
 	let subscriptionOne = quotes
 		.subscribe {
 			print("1) \($0)")
 	}
 	
-	quotes.on(.next("doOrNot"))
+	quotes.on(.next(doOrDoNot))
 	
 	let subscriptionTwo = quotes
 		.subscribe {
 			print("2) \($0)")
 	}
 	
-	quotes.onNext("lackFail")
+	quotes.onNext(lackOfFaith)
+	
+	subscriptionOne.dispose()
+	
+	quotes.onNext(eyesCanDeceive)
 	
 	quotes.onCompleted()
 	
+	let subscriptionThree = quotes
+		.subscribe {
+			print("3) \($0)")
+	}
+	
+	quotes.onNext(stayOnTarget)
+	
+	subscriptionTwo.dispose()
+	subscriptionThree.dispose()
 }
 
 example(of: "BehaviorSubject") {
 	
-	enum AnyError: Error {
-		case neverSaidThat
-	}
-	
 	let disposeBag = DisposeBag()
 	
-	let quotes = BehaviorSubject<String>(value: "I'm your father")
+	let quotes = BehaviorSubject<String>(value: iAmYourFather)
 	
-	quotes.onNext("Second thing I said")
-	
-	let subscriptionOne = quotes.subscribe {
+	quotes.subscribe {
 		print("1) \($0)")
 	}
 	
-	quotes.onNext("Thrid thing I said")
+	quotes.onError(Quote.neverSaidThat)
 	
-	quotes.onError(AnyError.neverSaidThat)
+	quotes.onNext("Second thing I said")
+	
+	quotes.onNext("Thrid thing I said")
 	
 	quotes.subscribe {
 		print("2) \($0)")
@@ -66,9 +76,9 @@ example(of: "ReplaySubject") {
 	
 	let subject = ReplaySubject<String>.create(bufferSize: 2)
 	
-	subject.onNext("Use the force Luke")
+	subject.onNext(useTheForce)
 	
-	subject.onNext("The force is strong")
+	subject.onNext(theForceIsStrong)
 	
 	subject.subscribe {
 		print("1) \($0)")
@@ -83,3 +93,4 @@ example(of: "ReplaySubject") {
 	.disposed(by: disposeBag)
 	
 }
+
